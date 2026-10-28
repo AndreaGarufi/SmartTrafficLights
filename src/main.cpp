@@ -4,6 +4,11 @@
 //aggiornamento: l'ho segnalato con la scritta: "MY MAC"
 
 
+//funzioni utilizzate: 
+//espmesh->getMac() ->ritorna il mac del singolo dispositivo
+//espmesh->isRoot() ->ritorna true se il dispositivo è root
+//espmesh->isConnected() ->ritorna true se il dispositivo è connesso
+
 //PROMEMORIA
 //continua con il salvataggio nell'array di tutti i mac che arrivano + quello della scheda
 
