@@ -1,17 +1,14 @@
 //NOTA! 
-//con la funzione broadcast() ogni scheda manda il messaggio anche a se stessa quindi se lo
-//avvii con una singola scheda vedrai comunque il suo indirizzo mac stampato sul display
-//aggiornamento: l'ho segnalato con la scritta: "MY MAC"
+//con la funzione broadcast() ogni scheda manda il messaggio anche a se stessa:
+//risolto tutti i problemi di stampa dei e salvataggio dei mac address, ora è tutto ordinato
 
 //Il led RGB per qualche motivo funziona al contrario: LOW ->accende il led, HIGH -> spegne il led
 
-//funzioni utilizzate: 
+//funzioni utili: 
 //espmesh->getMac() ->ritorna il mac del singolo dispositivo
 //espmesh->isRoot() ->ritorna true se il dispositivo è root
 //espmesh->isConnected() ->ritorna true se il dispositivo è connesso
 
-//PROMEMORIA
-//continua con il salvataggio nell'array di tutti i mac che arrivano + quello della scheda
 
 
 //INFO!
@@ -88,8 +85,6 @@ void onMesh(const EspMeshEvent &e) {    //evento di tipo espmesh
     digitalWrite(LED_RGB_R, LOW);
     digitalWrite(LED_RGB_G, LOW);    //questi 3 per ottenere il giallo
     digitalWrite(LED_RGB_B, HIGH);
-
-
 
     break;
   case EspMeshEventType::Message:
