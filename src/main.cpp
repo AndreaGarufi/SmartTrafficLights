@@ -35,16 +35,21 @@ constexpr unsigned long PEER_SYNC_RQ_EXPR_MS = 3000;
 
 constexpr uint8_t ESPNOW_CHANNEL = 1;  // Same channel as the ESP8266 node
 
-constexpr int MAX_MESH_NODES = 2;
+constexpr int MAX_MESH_NODES = 4;
 constexpr int MACLEN         = 6;
-constexpr bool isLeader = true; // true = leader; false = follower
+constexpr bool isLeader = false; // true = leader; false = follower
 
 // Semaphore (traffic light) timing
-constexpr uint32_t GREEN_TIME_MS  = 3000;
+constexpr uint32_t GREEN_TIME_MS  = 2000;
 constexpr uint32_t YELLOW_TIME_MS = 1000;
 constexpr uint32_t RED_TIME_MS    = 3000;
 constexpr uint32_t SEM_LOOP_TIME_MS =
     GREEN_TIME_MS + YELLOW_TIME_MS + RED_TIME_MS;
+constexpr int SEM_STATES = 3;
+constexpr int PHASE_OFFSET = 0;
+// constexpr int PHASE_OFFSET = SEM_LOOP_TIME_MS/2;
+
+
 
 // ============================================================================
 // Types
@@ -260,10 +265,10 @@ static void applySemState(int s) {
 /** @brief Pick the light from the (leader-aligned) time and update the LEDs. */
 void SemaphoreLoop() {
   uint32_t leaderTime = millis() + clockOffset;
-  uint32_t t = leaderTime % SEM_LOOP_TIME_MS;
+  uint32_t t = (millis() + clockOffset + PHASE_OFFSET) % SEM_LOOP_TIME_MS;
 
   int s;
-  if (t < GREEN_TIME_MS)                      s = SEM_GREEN;
+  if (t < GREEN_TIME_MS)                       s = SEM_GREEN;
   else if (t < GREEN_TIME_MS + YELLOW_TIME_MS) s = SEM_YELLOW;
   else                                         s = SEM_RED;
 
@@ -490,7 +495,9 @@ void loop() {
   drainRxPeerQueue();
 
   // Status LED: green when connected to at least one peer, blue otherwise
-  if (numPeer >= 1)
+  if ((numPeer >= 1) && isLeader)
+    setRgbLed(YELLOW);
+  else if ((numPeer >= 1) && !isLeader)
     setRgbLed(GREEN);
   else
     setRgbLed(BLUE);
